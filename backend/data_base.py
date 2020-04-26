@@ -1,5 +1,6 @@
 import sqlite3
 import backend.client as clt
+import threading
 
 class DataBase:
 
@@ -31,19 +32,32 @@ class DataBase:
                 'int':'INTEGER'
             }
             self._tables = {}
+            self._lock = threading.Lock()
 
         # Getters 
         @property
         def conn(self):
             return self._conn
+        
+        @conn.setter
+        def conn(self, conn):
+            self._conn = conn
 
         @property
         def cursor(self):
             return self._cursor
 
+        @cursor.setter
+        def cursor(self, cursor):
+            self._cursor = cursor
+
         @property
         def db_name(self):
             return "Restringido"
+
+        def open_db(self):
+            self.conn = sqlite3.connect(self._route + self._db, check_same_thread=False)
+            self.cursor = self.conn.cursor()
 
         def get_tables(self):
             self.cursor.execute('SELECT name from sqlite_master where type="table"')
@@ -66,9 +80,14 @@ class DataBase:
             table_string = (table_string[:-2] + ')')
             
             try:
+                self.open_db()
+                self._lock.acquire(True)
                 self.cursor.execute(table_string)
             except:
                 print('Table already exists')
+            finally:
+                self._lock.release()
+                self.conn.close()
             
         def insert_data(self, data, table):
             '''
@@ -83,19 +102,44 @@ class DataBase:
             for i in range(len(data)):
                 dat += (str(data[i]) + ', ')
             dat = dat[:-2] + ')'
-            self.cursor.execute(dat)
-            self.conn.commit()
+            try:
+                self.open_db()
+                self._lock.acquire(True)
+                self.cursor.execute(dat)
+                self.conn.commit()
+            finally:
+                self._lock.release()
+
             #print(self.cursor.fetchall())
 
         def select_data(self, query):
             '''
             Metodo para hacer consultas a la base de datos
             '''
-            
-            self.cursor.execute(query)
-            data = self.cursor.fetchall()
+            try:
+                self.open_db()
+                self._lock.acquire(True)
+                self.cursor.execute(query)
+                data = self.cursor.fetchall()
+                self.conn.commit()
+            finally:
+                self._lock.release()
             return(data)
             #return(self.cursor.fetchall())
+        
+        def remove_data(self, query):
+            '''
+            Metodo para eliminar una fila de la base de datos
+            '''
+
+            try:
+                self.open_db()
+                self._lock.acquire(True)
+                self.cursor.execute(query)
+                self.conn.commit()
+            finally:
+                self._lock.release()
+            return("Se ha removido exitosamente el dato")
 
 
         @db_name.setter

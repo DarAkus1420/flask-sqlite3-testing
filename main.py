@@ -30,4 +30,4 @@ if __name__ == "__main__":
         print("No se pueden agregar mas valores")
     
 
-    sv.app.run(debug=False)
+    sv.app.run(debug=True)

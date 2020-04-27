@@ -61,8 +61,3 @@ class Client:
             'debt': 'NOT NULL'
 
         }
-
-# if __name__ == "__main__":
-#     cliente = Client(123, "Juan", "Temuco", 12345)
-#     print(cliente.to_sql())
-#     print(cliente.return_data())

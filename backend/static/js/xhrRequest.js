@@ -6,6 +6,8 @@ let request = obj => {
             Object.keys(obj.headers).forEach(key => {
                 xhr.setRequestHeader(key. obj.headers[key]);
             });
+        }else{
+            xhr.setRequestHeader("Content-type", "application/json", "Access-Control-Allow-Origin")
         }
         xhr.onload = () => {
             if (xhr.status >= 200 && xhr.status < 300) {
@@ -15,6 +17,7 @@ let request = obj => {
             }
         };
         xhr.onerror = () => reject(xhr.statusText);
+        console.log(obj.body);
         xhr.send(obj.body);
     })
 }

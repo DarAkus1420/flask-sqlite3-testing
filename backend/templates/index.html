@@ -27,7 +27,7 @@
     <div class="container">  
         <div class="row">
             <br>
-            <a href="#ventana1" class="btn btn-primary" data-toggle="modal">Añadir nueva entrada</a>
+            <a href="#ventana1" class="btn btn-primary" data-toggle="modal" onclick="hideButton('submit')"">Añadir nueva entrada</a>
             <div class="modal fade" id="ventana1">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -41,8 +41,8 @@
                         <div class="model-body">
                             <div class="col">
                                 <div class="row">
-                                    <div class="col">
-                                        <div class="form-group">
+                                    <div class="col" id="codigoForm">
+                                        <div class="form-group" >
                                             <label for="code">Code</label>
                                             <input type="text" name="code" id="code" class="form-control">
                                         </div>
@@ -62,7 +62,8 @@
                                     <label for="debt">Debt</label>
                                     <input type="text" name="debt" id="debt" class="form-control">
                                 </div>
-                                <button class="btn btn-primary">Submit</button>
+                                <button class="btn btn-primary" id="submitButton" onclick="submitData()" data-dismiss="modal">Submit</button>
+                                <button class="btn btn-primary" id="updateButton" onclick="updateRow()" data-dismiss="modal">Update</button>
                             </div>
                         </div><br>
                     </div>
@@ -83,28 +84,7 @@
                         </tr>
                     </thead>
                     <tbody id='bodyTable'>
-                        <!-- Contenido de la db -->
                         
-                        <!-- <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                            <td>
-                                <button class="btn btn-primary">Editar</button>
-                                <button class="btn btn-danger">Eliminar</button>
-                            </td>
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>@twitter</td>
-                            <td>
-                                <button class="btn btn-primary">Editar</button>
-                                <button class="btn btn-danger">Eliminar</button>
-                            </td>
-                          </tr> -->
                     </tbody>
                 </table>
             </div>

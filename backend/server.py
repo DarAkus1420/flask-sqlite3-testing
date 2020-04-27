@@ -23,17 +23,19 @@ def get_data():
 def delete_data(code):
     a = (db.select_data(f'DELETE from Clientes where code="{code}"'))
     print("Eliminando dato")
-    print(a)
-    return jsonify(a)
+    return jsonify("Dato eliminado correctamente de la base de datos")
 
-@app.route('/get-city/<city>')
-def get_city(city):
-    a = (db.select_data(f'Select * from Clientes where city="{city}"'))
-    print(a)
-    return jsonify(a)
+@app.route('/update-data', methods=['POST'])
+def update_data():
+    a = request.json
+    db.update_data(f'UPDATE Clientes SET name = "{a["name"]}", city = "{a["city"]}", debt = "{a["debt"]}" WHERE code = "{a["actualCode"]}"')
+    print("exitoso")
+    return("a")
 
-@app.route('/get-code/<code>')
-def get_code(code):
-    a = (db.select_data(f'Select * from Clientes where code="{code}"'))
-    return(jsonify(a))
-
+@app.route('/create-data', methods=['POST'])
+def create_data():
+    a = request.json
+    data = [f'"{a["code"]}", "{a["name"]}", "{a["city"]}", "{a["debt"]}"']
+    print(data)
+    db.insert_data(data, 'Clientes')
+    return("Se inserto correctamente el dato")

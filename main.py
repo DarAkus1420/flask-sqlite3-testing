@@ -5,7 +5,7 @@ import backend.client as clt
 
 if __name__ == "__main__":
 	#Creacion db, si gusta puede eliminarla o cambiarle el nombre, el programa seguira funcionando
-    db = db.DataBase('db.db')
+    db = db.DataBase('a.db')
     sv.db = db
     clientes = []
     #Se crean los clientes
@@ -30,4 +30,4 @@ if __name__ == "__main__":
         print("No se pueden agregar mas valores")
     
 
-    sv.app.run(debug=True)
+    sv.app.run(debug=False)

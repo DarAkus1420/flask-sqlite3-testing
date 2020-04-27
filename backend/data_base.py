@@ -141,6 +141,18 @@ class DataBase:
                 self._lock.release()
             return("Se ha removido exitosamente el dato")
 
+        def update_data(self, query):
+            '''
+            Metodo para actualizar una fila en la base de datos
+            '''
+            try:
+                self.open_db()
+                self._lock.acquire(True)
+                self.cursor.execute(query)
+                self.conn.commit()
+            finally:
+                self._lock.release()
+            return("Se ha actualizado exitosamente el dato")
 
         @db_name.setter
         def db_name(self, name):

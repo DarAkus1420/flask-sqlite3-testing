@@ -1,3 +1,5 @@
+let data;
+
 function getData(){
     // let input = document.getElementById('input').value;
 
@@ -6,8 +8,8 @@ function getData(){
         method: 'GET',
         url: `http://127.0.0.1:5000/get-data`
     }).then(data => {
-        let a = JSON.parse(data);
-        printTemplate(a);
+        let dbData = JSON.parse(data);
+        printTemplate(dbData);
     }).catch(error => {
         console.log(error);
     })
@@ -31,14 +33,16 @@ function getCount(parent, getChildrensChildren){
 }
 
 function deleteRow(id, data){
-    console.log("delete");
+
+    
+
     element = document.getElementById(id);
     request({
         method: 'GET',
         url: `http://127.0.0.1:5000/delete-data/${data}`
     }).then(data => {
         let a = JSON.parse(data);
-        console.log(a);
+        console.log(a + "a");
     }).catch(error => {
         console.log(error);
     })
@@ -46,11 +50,95 @@ function deleteRow(id, data){
     
 }
 
+function hideButton(button){
+
+    if(button == "submit"){
+        element = document.getElementById('submitButton');
+        element.style.display = "block";
+        element = document.getElementById('updateButton');
+        element.style.display = 'none'
+        element = document.getElementById('codigoForm');
+        element.style.display = "block";
+    } else if (button == 'update'){
+        element = document.getElementById('updateButton');
+        element.style.display = "block"
+        element = document.getElementById('submitButton');
+        element.style.display = "none";
+        element = document.getElementById('codigoForm');
+        element.style.display = "none";
+    }
+
+    
+}
+
+function datoActual(id){
+    data = id;
+    console.log(data);
+}
+
+
+function updateRow(){
+
+    let code = document.getElementById('code').value;
+    let name = document.getElementById('name').value;
+    let city = document.getElementById('city').value;
+    let debt = document.getElementById('debt').value;
+
+
+
+    request({
+        method: 'POST',
+        url: `http://127.0.0.1:5000/update-data`,
+        body: JSON.stringify({
+            'code':code,
+            'name':name,
+            'city':city,
+            'debt':debt,
+            'actualCode': data
+        }),
+        
+    }).then(data => {
+        console.log(data);
+        hideButton("Submit");
+        getData();
+    }).catch(error => {
+        console.log(error);
+    })
+
+    
+}
+
+function submitData(){
+
+    let code = document.getElementById('code').value;
+    let name = document.getElementById('name').value;
+    let city = document.getElementById('city').value;
+    let debt = document.getElementById('debt').value;
+
+
+
+    request({
+        method: 'POST',
+        url: `http://127.0.0.1:5000/create-data`,
+        body: JSON.stringify({
+            'code':code,
+            'name':name,
+            'city':city,
+            'debt':debt
+        }),
+        
+    }).then(data => {
+        console.log(data);
+        getData();
+    }).catch(error => {
+        console.log(error);
+    })
+}
+
 function printTemplate(data){
     let element = document.getElementById("bodyTable");
+    element.innerHTML = '';
     let rows = element.childElementCount;
-    console.log(rows);
-    console.log(data);
     for(let i = 0; i<data.length; i++){
         element.innerHTML +=    `<tr id='row${i+rows}'>
                                     <th scope='row'>${data[i][0]}</th>
@@ -58,7 +146,7 @@ function printTemplate(data){
                                     <td>${data[i][2]}</td>
                                     <td>$${data[i][3]}</td>
                                     <td>
-                                    <button class="btn btn-primary" >Editar</button>
+                                    <a href="#ventana1" class="btn btn-primary" data-toggle='modal' onclick="hideButton('update');datoActual(${data[i][0]})">Editar</a>
                                     <button class="btn btn-danger" onclick='deleteRow("row${i+rows}", ${data[i][0]})'>Eliminar</button>
                                     </td>
                                 </tr>`

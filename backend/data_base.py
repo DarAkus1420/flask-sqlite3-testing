@@ -169,3 +169,5 @@ class DataBase:
             cls.instance = cls.Instance(database_name = db)
         return cls.instance
 
+if __name__ == '__main__':
+	print(DataBase.__doc__)
